@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script type="module">
+  import { defaultToString,ValuePair} from './js/defaultToString.js'
+	
+	class Dictionary {
+		constructor( toStrFn = defaultToString ) {
+			this.toStrFn = toStrFn;
+			this.item = {};
+		}
+		hasKey(key) {
+			return this.item[this.toStrFn(key)] != null
+		}
+		set(key, value) {
+			if(key != null && value != null) {
+				const itemKey = this.toStrFn(key);
+				this.item[itemKey] =　new ValuePair(key, value);
+				return true
+			}
+      return false
+		}
+		remove(key) {
+			if(this.hasKey(key)) {
+				delete this.item[this.toStrFn(key)]
+				return true
+			}
+			return false
+		}
+		get(key) {
+			// if(this.hasKey(key)){
+			// 	return this.item[this.toStrFn(key)];
+			// }
+			// return false
+			const valuePair = this.item[this.toStrFn(key)]
+			return valuePair == null ? undefined : valuePair.value
+		}
+		keyValues() {
+      // return Object.values(this.item)
+      let valuePairs = [];
+      for(let k in this.item) {
+        if(this.hasKey(k)) {
+          valuePairs.push(this.item[k])
+        }  
+      }
+      return valuePairs
+    }
+    keys() {
+      return this.keyValues().map(valuePair => valuePair.key);
+    }
+    values() {
+      return this.keyValues().map(valuePair => valuePair.value);
+    }
+    size() {
+      return Object.keys(this.item).length  //Object.values()也可以
+    }
+    clear() {
+      this.item = {}
+    }
+    isEmpty() {
+      return this.size() == 0
+    }
+    toString() {
+      if(this.isEmpty()) {
+        return ''
+      }
+      else {
+        let valuePairs = this.keyValues()
+        let objString = valuePairs[0].toString() // 这里为什么能用toString() ？？
+        for(let i = 1; i< valuePairs.length; i++) {
+          objString = `${objString},${valuePairs[i].toString()}`
+        }
+        return objString
+      } 
+    }
+  }
+	let some = new Dictionary()
+	some.set(1,'hhh')
+	some.set('t','mhh')
+  console.log(some.keyValues())
+  console.log(some.toString())
+</script>

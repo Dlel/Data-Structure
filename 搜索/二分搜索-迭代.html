@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script>
+  const DOES_NOT_EXIST = -1;
+  const Compare = {
+    LESS_THAN: 1,
+    BIGGER_THAN: 2,
+    EQUALS: 3
+  }
+
+  function binarySearch(array, value, compareFn = defaultCompare) {
+    const sortArray = qucickSort(array) //用快排先排序
+    // const sortArray = array //用快排先排序
+    let low = 0;
+    let high = sortArray.length - 1;
+    while (lesserOrEquals(low, high, compareFn)) {
+      let mid = Math.floor((low + high) / 2)
+      const element = sortArray[mid]
+      if (compareFn(element, value) == Compare.LESS_THAN) {
+        low = mid + 1;
+      } else if (compareFn(element, value) == Compare.BIGGER_THAN) {
+        high = mid - 1;
+      } else {
+        return mid;
+      }
+    }
+    return DOES_NOT_EXIST = -1
+  }
+
+  function lesserOrEquals(a, b, compareFn) { // 也就是看low和high对应的值是不是high要答，如果low对应的值大于high对应的值说明遍历完了可以结束
+    const comp = compareFn(a, b);
+    return comp === Compare.LESS_THAN || Compare.EQUALS //循环继续的条件是low和high对应的值一定要不小于要不等于，出现大于即可停止
+  }
+  const defaultCompare = (value1, value2) => {
+    if (value1 > value2) {
+      return Compare.BIGGER_THAN;
+    } else if (value1 < value2) {
+      return Compare.LESS_THAN;
+    } else {
+      return Compare.EQUALS;
+    }
+  }
+
+  console.log(binarySearch([1, 2, 3, 4, 5], 4))
+</script>

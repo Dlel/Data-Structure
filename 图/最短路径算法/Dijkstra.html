@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script>
+  var graph = [
+    [0, 2, 4, 0, 0, 0],
+    [0, 0, 1, 4, 2, 0],
+    [0, 0, 0, 0, 3, 0],
+    [0, 0, 0, 0, 0, 2],
+    [0, 0, 0, 3, 0, 2],
+    [0, 0, 0, 0, 0, 0]
+  ]
+  const INF = Number.MAX_SAFE_INTEGER; //无穷大的数
+  const Dijkstra = (graph, src) => {
+    const dist = [];
+    const visit = [];
+    const { //这种写法也是获取graph的长度
+      length
+    } = graph; //此时length = 6
+    for (let i = 0; i < length; i++) { //变量初始化
+      dist[i] = INF;
+      visit[i] = false
+    }
+    dist[src] = 0; //源节点到自己的距离设为0
+    for (let i = 0; i < length - 1; i++) { //因为最后一个点F终结点不需要在找路径了所以 减去1
+      const u = minDistance(dist, visit); // 找到目标点到下一个点的最短路径
+      visit[u] = true; //找到之后将该节点标记，以免下次在计算
+      for (let v = 0; v < length; v++) { //开始计算源节点到邻近节点的值
+        // 四个条件， 没被访问过也就是没被标记过；   两个点之间直接相通；   目标路径现在不是无穷大； 目标路径值+ 两个点的值小于上一次记录的路径
+        if (!visit[v] && graph[u][v] !== 0 && dist[u] !== INF && dist[u] + graph[u][v] < dist[v]) {
+          dist[v] = dist[u] + graph[u][v]; //路径值 = 源节点到中继节点距离(这个中继节点是上面找到的A到他的最短路径)  + 中继节点到目标节点的距离
+        }
+      }
+    }
+    return dist
+  };
+  const minDistance = (dist, visit) => { //找到dist里的最短距离。
+    let min = INF;
+    let minIndex = -1;
+    for (let v = 0; v < dist.length; v++) {
+      if (visit[v] === false && dist[v] <= min) {
+        min = dist[v];
+        minIndex = v;
+      }
+    }
+    return minIndex
+  };
+  console.log(Dijkstra(graph, 0))
+</script>

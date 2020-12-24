@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script>
+  // 注意： 标杆位置是左右子数组的分界点， 中心位是在数组(子数组)里的中心位
+  function quickSort(array) {
+    const {
+      length
+    } = array;
+    return quick(array, 0, length - 1) //快排参数： 要排序的数组、左指针索引、右指针索引
+  }
+
+  function quick(array, left, right) {
+    let index; //记录的index相当于一个区分左右两边的标杆索引位置
+    if (array.length > 1) { //如果只有1个值的数组不用排序可以直接返回
+      index = partition(array, left, right) //返回值是确定的标杆位置，内部实现排序
+      if (left < index - 1) { //如果标杆位置左边数量大于等于2时，还要在调用快排
+        quick(array, left, index - 1) //此时针对左边数组，快排的左右指针索引就变为初始的0left和标杆左一位
+      }
+      if (right > index) { //同时标杆位置右边数量大于等于1时，也要在调用快排
+        quick(array, index, right) //此时针对右边数组，快排的左右指针索引就变为标杆和初始数组最后一位的right
+      }
+    }
+    return array //返回当前数组/从if运行完出来已排好序的数组
+  }
+
+  function partition(array, left, right) {
+    const pivot = array[Math.floor((left + right) /
+      2)]; //确定子数组的中心位的值(注意位置索引不是length/2，因为array一直是一整个数组，变化的只是左右点，是针对左右点的中心位)
+    let i = left; //左索引
+    let j = right; //右索引
+    while (i <= j) { //中止循环条件是左索引大于右索引
+      while (array[i] < pivot) { //左索引对应的值要小于中心值，才会动。否则停下来
+        i++; //控制左索引向前
+      }
+      while (array[j] > pivot) { //右索引对应的值要大于中心值，才会动。否则停下来
+        j--; //控制右索引向后
+      }
+      if (i <= j) { //如果左索引值小于等于右索引值
+        [array[i], array[j]] = [array[j], array[i]]; //进行交换
+        i++; //继续控制左索引向前
+        j--; //继续控制右索引向后
+      }
+    }
+    return i //返回此时的左索引值作为下一次的标杆位置
+  }
+
+  console.log(quickSort([3, 5, 1, 6, 4, 7, 2]))
+</script>

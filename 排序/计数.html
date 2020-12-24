@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script>
+  function countSort(array) {
+    if (array.length < 2) { // 数组只有一项，直接返回
+      return array
+    }
+    const maxIndex = findMaxValue(array); // 找最大值
+    let counts = new Array(maxIndex + 1); // 值+1后 作为新建数组的容量(因为从索引要从0开始)
+    array.forEach(element => { //开始遍历计数，待排序数组的值作为新建数组的索引，出现几次，新建数组索引对应的值就+1
+      if (!counts[element]) {
+        counts[element] = 0;
+      }
+      counts[element]++;
+    });
+    let sortIndex = 0;
+    counts.forEach((count, index) => { //开始排序，遍历新的计数数组(值和索引)
+      while (count > 0) { //值count是待排序数组array的对应值出现了几次
+        array[sortIndex++] = index; //sortIndex是作为索引更新array的值， index为计数数组的索引值，也为array的更新值
+        count--;
+      }
+    });
+    return array
+  }
+
+  function findMaxValue(array) {
+    let maxValue = array[0];
+    for (let i = 0; i < array.length; i++) {
+      if (maxValue < array[i]) {
+        maxValue = array[i];
+      }
+    }
+    return maxValue
+  }
+  console.log(countSort([3, 2, 5, 3, 8, 6, 1]))
+</script>

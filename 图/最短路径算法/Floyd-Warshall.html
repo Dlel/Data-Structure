@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script>
+  var graph = [
+    [0, 2, 4, 0, 0, 0],
+    [0, 0, 1, 4, 2, 0],
+    [0, 0, 0, 0, 3, 0],
+    [0, 0, 0, 0, 0, 2],
+    [0, 0, 0, 3, 0, 2],
+    [0, 0, 0, 0, 0, 0]
+  ];
+  const floyd = graph => {
+    const dist = [];
+    const {
+      length
+    } = graph;
+    for (let i = 0; i < length; i++) { //映射一个新距离二维数组
+      dist[i] = [];
+      for (let j = 0; j < length; j++) {
+        if (i === j) { //源节点到该节点 为 0 
+          dist[i][j] = 0;
+        } else if (graph[i][j] == 0) { //源节点到其他节点为0 意味着不可达， 赋值 INF
+          dist[i][j] = Infinity;
+        } else { //其余直接使用每个顶点的权值
+          dist[i][j] = graph[i][j];
+        }
+      }
+    }
+    // console.log(dist)
+    for (let k = 0; k < length; k++) { //中继节点
+      for (let i = 0; i < length; i++) {
+        for (let j = 0; j < length; j++) {
+          if (dist[i][j] > dist[i][k] + dist[k][j]) { //遍历所有可能，找到一个中继节点可以满足该条件的就更新距离
+            dist[i][j] = dist[i][k] + dist[k][j] // 意思是假设A->B距离为6，但是找到一个节点C A->C->B距离才为4。
+          }
+        }
+      }
+    }
+    return dist
+  }
+  console.log(floyd(graph))
+</script>

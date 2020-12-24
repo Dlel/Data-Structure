@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script>
+  function knapSack(capacity, weights, values, n) { //参数：背包限重、重量数组，价值数组，物品数量
+    const KS = [];
+    for (let i = 0; i <= n; i++) {
+      KS[i] = []; //构建KS二维数组框架
+    }
+    for (let i = 0; i <= n; i++) { //物品里的物品数
+      for (let w = 0; w <= capacity; w++) { //重量数
+        if (i == 0 || w == 0) {
+          KS[i][w] = 0; //质量为0 和物品0都不用计算，因此w=0这一列全为0.i=0这一列全为0
+        } else if (weights[i - 1] <= w) { //当现在背包限额大于第1、2个物品重量(可以放得下东西了)
+          //a算价值,把这个物品1、2的价值 + 当只有0、0,1这个物品时，背包质量-放完0、0,1这个物品时剩的质量。这个剩的质量上次计算对应的最大价值 
+          let a = values[i - 1] + KS[i - 1][w - weights[i - 1]];
+          let b = KS[i - 1][w]; //只有物品0时，限额为w时的最大价值
+          KS[i][w] = a > b ? a : b; //比较两者的最大值，也就是此时限额背包可以装的最大价值
+        } else { //当限额不满足时，把上一行的最优值抄下来
+          KS[i][w] = KS[i - 1][w];
+        }
+      }
+    }
+    findValues(n, capacity, KS, weights, KS[n][capacity])
+    console.log(KS)
+    return KS[n][capacity]
+  }
+
+  function findValues(n, capacity, KS, weights, max) {
+    let i = n; //物品数量
+    let k = capacity; //总质量
+    console.log(`最大价值: ${ max }`)
+    console.log('构成的物品有：')
+    while (i > 0 && k > 0) { //开始遍历KS矩阵
+      if (KS[i][k] !== KS[i - 1][k]) { //主要是看上下行是否变化
+        console.log(`物品${i}`); //若变化则物品i是在里面作为贡献方
+        k = k - weights[i - 1]; // 将他共享的质量减掉 看看还剩几斤，去对应列
+        i--; //往上接着查，也就是上一行
+      } else { //若相等，直接跳到下一个物品i-1，也就是上一行
+        i--;
+      }
+    }
+  }
+  // KS矩阵i是物品值， w是质量。
+  //当w开始慢慢递增时，看第一个i也就是1物品质量满足不满足，满足计算价值并更新最大价值，不满足继承上一行的值
+  //最大价值的计算，第一个是当吧第一个物品放进来的价值+KS矩阵中上一行第[w - weights[i - 1]]列的位置的价值   || 第二个是直接拿到上一行对应位置的值
+  //例子：最大价值的计算，第二个是当吧第二个物品放进来的价值+当只有物品1且除去第二个质量的时候的价值 || 第二个是直接拿到上一行对应位置的值
+  //第一个和第二个比较，最大的更新此时的iw位置的值
+
+  console.log(knapSack(7, [2, 3, 4, 5], [3, 4, 5, 8], 4))
+</script>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script>
+  function knapSack(capacity, weights, values) {
+    let n = values.length;
+    let load = 0;
+    let val = 0;
+    console.log('背包组成：')
+    for (let i = 0; i < n && load < capacity; i++) {
+      if (weights[i] <= capacity - load) {
+        val += values[i];
+        load += weights[i]
+        console.log(`物品 ${i+1}`)
+      } else {
+        const r = (capacity - load) / weights[i]
+        console.log(`物品 ${i+1} 质量的 ${r}`)
+        val += values[i] * r;
+        load += weights[i]; //为啥加一整个
+      }
+    }
+    return `结果最大价值 ${val}`
+  }
+  console.log(knapSack(7, [2, 3, 4], [1, 2, 3]))
+</script>

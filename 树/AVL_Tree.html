@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script type="module">
+  import { defaultCompare, Node } from './necessary.js'
+  
+  class AVLTree {
+    constructor(comparFn = defaultCompare) { //引入要赋值的方法或者其他变量
+      this.comparFn = comparFn;  //要引入比较大小的方法
+      this.root = null;  //头
+    }
+    // 获取树的高度
+    getHeight() {
+      return this.getNodeHeight(this.root)
+    }
+    getNodeHeight(node) {
+      if(node == null) {
+        return -1;
+      }
+      return Math.max(this.getNodeHeight(node.left),this.getNodeHeight(node.right)) +1
+    }
+    // 计算节点平衡因子
+    getBalanceFactor(node) {
+      const heightDifference = this.getNodeHeight(node.left) - this.getNodeHeight(node.right);
+      const BalanceFactor = {
+      UNBALANCED_RIGHT : 1,
+      SLIGHTLY_UNBALANCED_RIGHT : 2,
+      UNBALANCED_LEFT : 3, 
+      SLIGHTLY_UNBALANCED_LEFT : 4,
+      BALANCED : 5
+     };
+      switch(heightDifference) {
+        case -2:
+          return BalanceFactor.UNBALANCED_RIGHT;
+        case -1:
+          return BalanceFactor.SLIGHTLY_UNBALANCED_RIGHT;
+        case 1:
+          return BalanceFactor.UNBALANCED_LEFT;
+        case 2:
+          return BalanceFactor.SLIGHTLY_UNBALANCED_LEFT;
+        default:
+          return BalanceFactor.BALANCED;
+      }
+    }
+  
+    //旋转 左旋LL
+    rotationLL(node) {
+      let temp = node.left; 
+      node.left = temp.right;
+      temp.right = node;
+      return temp
+    }
+    rotationRR(node) {
+      let temp = node.right;
+      node.right = temp.left;
+      temp.left = node;
+      return temp
+    }
+    rotationLR(node) {
+      node.left = this.rotationRR(node.left);
+      return this.rotationLL(node)
+    }
+    rotationRL(node) {
+      node.right = this.rotationLL(node.right);
+      return this.rotationRR(node)
+    }
+
+    // AVL插入节点
+    insert(key) {
+      this.root = this.insertNode(this.root, key); 
+    }
+    insertNode(node, key) {  //node更多的是控制在树的几层
+      if(node == null) { //基线条件
+        return new Node(key) //递归每层的返回值
+      } else if(this.comparFn(key, node.left.key) == true) {
+        node.left = this.insertNode(node.left, key);  //每层返回值都需要改变node节点
+      } else if(this.comparFn(key, node.right.key) == false) {
+        node.right = this.insertNode(node.right, key);
+      } else {
+        return node  //重复的键 直接返回树节点
+      }
+      const banlanceFactor = this.getBanlanceFactor(node);
+      if(banlanceFactor == BalanceFactor.UNBALANCED_LEFT) {  //左倾
+        if(this.comparFn(key, node.left.key) == true){ //子树左倾
+          node = this.rotationLL(node)
+        } else { //子树右倾
+          node = this.rotationLR(node)
+        }
+      }
+      if(banlanceFactor == BalanceFactor.UNBALANCED_RIGHT) {//右倾
+        if(this.comparFn(key, node.right.key) == false){ //子树右倾
+          node = this.rotationRR(node)
+        } else {//子树左倾
+          node = this.rotationRL(node)
+        }
+      }
+      return node   //最终返回的树节点
+    }
+
+
+
+    
+  }
+</script>

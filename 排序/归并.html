@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script>
+  function mergeSort(array) {
+    if (array.length > 1) { //递归的停止条件，数组分为单个子数组了
+      const {
+        length
+      } = array; //length放里面，因为数组是不断分割的
+      const middle = Math.floor(length / 2); //中点分割，向下取整
+      const left = mergeSort(array.slice(0, middle)); //不包括middle
+      const right = mergeSort(array.slice(middle, length)); //不包括length
+      array = merge(left, right); //归的时候进行逐次排序的同时合并左右数组
+    } //最后归到所有数组合并完且排列完成
+    return array
+  }
+
+  function merge(left, right) {
+    let i = 0; //记录left的数组值比较时的索引
+    let j = 0; //记录right的数组值比较时的索引
+    let newArray = []; //组成排序好的数组
+    while (i < left.length && j < right.length) { //当任何一方比较的值索引到最后一位退出循环
+      // 两边比较，单个值更小的先放进数组，然后其对应一方下一个在进行比较，依次进行
+      newArray.push(left[i] < right[j] ? left[i++] : right[j++]); //i++ 先赋值i 然后i自加1
+    };
+    return newArray.concat(i < left.length ? left.slice(i) : right.slice(j)) //有一方的较的值索引到最后一位，证明另一方还有剩余，全部添加到数组尾部
+  }
+  console.log(mergeSort([8, 7, 6, 5, 4, 3, 2, 1]))
+</script>

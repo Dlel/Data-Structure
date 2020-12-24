@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script>
+  function factorial(n) {
+    if (n == 1 || n == 0) {
+      return 1
+    }
+    return n * factorial(n - 1)
+  }
+  console.log(factorial(3))
+
+
+  function fibonacci(n) { //递归版本  会爆栈
+    if (n < 1) return 0;
+    if (n <= 2) return 1;
+    return fibonacci(n - 1) + fibonacci(n - 2);
+  }
+  // console.log(fibonacci(100)) //会爆栈
+
+
+  function fib(n) { //迭代版本  不会爆栈
+    if (n == 0) return 0;
+    if (n == 1) return 1;
+    let a = 0,
+      b = 1;
+    for (let i = 2; i <= n; i++) {
+      let c = a + b;
+      a = b;
+      b = c;
+    }
+    return b
+  }
+  console.log(fib(4))
+
+  function fibMemoization(n) {
+    let memo = [0, 1];
+    const fibonacci = (n) => {
+      if (memo[n] != null) return memo[n]; //如果有就返回
+      return memo[n] = fibonacci(n - 1, memo) + fibonacci(n - 2, memo); //没有就添加进去并返回
+    };
+    return fibonacci; //添加完在运行一次，通过return memo[n]输出结果
+  }
+</script>

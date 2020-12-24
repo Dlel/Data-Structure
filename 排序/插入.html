@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script>
+  function insertSort(array) {
+    const {
+      length
+    } = array;
+    let temp; //记录插入的值
+    for (let i = 0; i < length; i++) {
+      let j = i; //每次需排序的数量的最后一个位置索引
+      temp = array[i]; //每次循环插入一个值
+      while (j > 0 && array[j - 1] > temp) { //待排序的数量的位置索引小于等于0时会跳出循环，当新插入的值大于前面位置值的时候也会跳出循环
+        array[j] = array[j - 1]; //每次while执行就代表前一位大于后一位，因此要调整位置
+        j--; //调整位置 待排序的值的索引往前一位 也就是-1
+      }
+      array[j] = temp; //当跳出循环代表插入值的位置已准备好，此时要将插入值放进该位置
+    }
+    return array
+  }
+  console.log(insertSort([3, 5, 1, 4, 2]))
+</script>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script>
+  const INF = Number.MAX_SAFE_INTEGER;
+  var graph = [
+    [0, 2, 4, 0, 0, 0],
+    [2, 0, 2, 4, 2, 0],
+    [4, 2, 0, 0, 3, 0],
+    [0, 4, 0, 0, 3, 2],
+    [0, 2, 3, 3, 0, 2],
+    [0, 0, 0, 2, 2, 0]
+  ];
+  const Prim = graph => { //相比D算法不需要输入源节点
+    const parent = []; //存储最后的结果  MST
+    const key = []; // 存储权值最小边  ==== dist
+    const visit = []; //记录访问过的节点  
+    const {
+      length
+    } = graph;
+    for (let i = 0; i < length; i++) {
+      key[i] = INF;
+      visit[i] = false;
+    }
+    key[0] = 0; //选择第一个key作为第一个顶点，第一个顶点总是MST的根节点
+    parent[0] = -1; //因为第一个顶点总是MST的根节点，所以parent[0] = -1
+    for (let i = 0; i < length - 1; i++) {
+      const u = minKey(key, visit);
+      visit[u] = true;
+      for (let v = 0; v < length; v++) {
+        if (graph[u][v] && !visit[v] && graph[u][v] < key[v]) { //v没被访问过， uv之间是连通的， uv的权值小于权值最小的边
+          parent[v] = u; //v点位置保存下一个要连的点u（V是按顺序的0，1，2，3，4，5）
+          key[v] = graph[u][v]; //权值最小的边更新。
+        }
+      }
+    }
+    // 把头部都给去掉（无用数据）
+    parent.shift();
+    key.shift();
+    let i = 1;
+    edge = parent.map(n => {
+      return `${n + '-' + `${i++}`}`
+    })
+    return { //返回连接边和该边权重
+      Edge: edge,
+      Weight: key
+    }
+  }
+
+  const minKey = (key, visit) => {
+    let min = INF;
+    let minIndex = -1;
+    for (let v = 0; v < key.length; v++) {
+      if (visit[v] === false && key[v] <= min) {
+        min = key[v];
+        minIndex = v;
+      }
+    }
+    return minIndex
+  }
+  console.log(Prim(graph))
+</script>

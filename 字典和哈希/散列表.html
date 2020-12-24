@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script type="module">
+  import {  
+    defaultToString, //要引入转变字符串函数；
+    ValuePair,//辅助类（存储单个键值对，以及包括键值对形式的输出字符串的方法）
+    LinkedList //单向链表
+  } from './js/defaultToString.js'
+
+  class HashTable {
+    constructor(toStrFn = defaultToString) {
+      this.toStrFn = toStrFn
+      this.item = []
+    }
+    loseloseHashCode(key) {//通用变哈希值的方法
+      if (typeof key === 'number') {
+        return key;
+      }
+      let itemKey = this.toStrFn(key);
+      let hash = 0;
+      for (let i = 0; i < itemKey.length; i++) {
+        hash += itemKey[i].charCodeAt()
+        // hash += itemKey.charCodeAt(i)
+      }
+      return hash % 37
+    }
+    // 另一种key变哈希值的方法
+    djb2HashCode(key) { //使用这个js和sj不会冲突！！
+      let itemKey = this.toStrFn(key);
+      let hash = 5381;
+      for (let i = 0; i < itemKey.length; i++) {
+        hash = (hash * 33) + itemKey.charCodeAt(i)
+        // hash = (hash * 33) + itemKey[i].charCodeAt()
+      }
+      return hash %  1013;
+    }
+
+    hashCode(key) {
+      // return this.loseloseHashCode(key)
+      return this.djb2HashCode(key)
+    }
+
+    
+    put(key, value) {
+      if (key != null && value != null) {
+        const position = this.hashCode(key)
+        
+        if (this.item[position] == null) {
+          this.item[position] = new LinkedList();
+        }
+        this.item[position].append(new ValuePair(key, value))
+        return true
+      }
+      return false
+    }
+    get(key) {
+      const position = this.hashCode(key);
+      const LinkedList = this.item[position];
+      if(LinkedList != null && !LinkedList.isEmpty()) {
+        let current = LinkedList.head; //找到链头
+        while(current) {
+          if(current.element.key == key) {   //找到一个链里面的元素key满足找的key就返回
+            return current.element.value
+          }
+          current = current.next;  //循环直到current的next为null
+        }
+      }
+      return undefined
+    }
+    remove(key) {
+      const position = this.hashCode(key);
+      const LinkedList = this.item[position];
+      if(LinkedList != null && !LinkedList.isEmpty()) {
+        let current = LinkedList.head;
+        while(current) {
+          if(current.element.key == key) {
+            LinkedList.remove(current.element);
+            if(LinkedList.isEmpty()){
+              delete this.item[position]
+            }
+          }
+          current = current.next
+        }
+      }
+      return undefined
+    }
+  }
+let some = new HashTable();
+some.put('js',100)
+some.put('sj',1000)
+some.put('pq',10)
+// some.remove('sj')
+console.log(some.item)
+// console.log(some.get('sj'))
+
+  
+</script>

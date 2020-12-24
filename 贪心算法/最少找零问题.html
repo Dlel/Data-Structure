@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script>
+  function minCoinChange(coins, amount) {
+    const change = [];
+    let total = 0;
+    for (let i = coins.length; i >= 0; i--) {
+      let coin = coins[i];
+      while (coin + total <= amount) {
+        change.push(coin);
+        total += coin
+      }
+    }
+    return change
+  }
+  console.log(minCoinChange([1, 5, 10, 25], 36))
+</script>

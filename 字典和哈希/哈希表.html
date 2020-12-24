@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script type="module">
+  import { defaultToString,ValuePair} from './js/defaultToString.js'
+
+  class HashTable {
+    constructor( toStrFn = defaultToString ) {
+      this.toStrFn = toStrFn;
+      this.item = {}
+    }
+    loseloseHashCode(key) {
+      if(typeof key === 'number') {
+        return key;
+      }
+      let itemKey = this.toStrFn(key);
+      let hash = 0;
+      for(let i = 0; i<itemKey.length; i++) {
+        hash += itemKey[i].charCodeAt()
+        // hash += itemKey.charCodeAt(i)
+      }
+      return hash % 37
+    }
+    hashCode(key) {
+      return this.loseloseHashCode(key)
+    }
+    put(key,value) {
+      if(key !=null && value != null){
+        let position = this.hashCode(key);
+        this.item[position] = new ValuePair(key, value);
+        return true
+      }
+      return false
+    }
+    get(key) {
+      let valuePair = this.item[this.hashCode(key)];
+      return valuePair == null ? undefined : valuePair.value
+    }
+    remove(key) {
+      // let valuePair =  this.item[this.hashCode(key)];
+      let hash = this.hashCode(key);
+      let valuePair =  this.item[hash];
+      if(valuePair != null) {
+        delete this.item[hash]
+        // delete this.item[this.hashCode(key)]
+        return true
+      }
+      return false
+    }
+  }
+  let some = new HashTable();
+  some.put('dll',22)
+  console.log(some.loseloseHashCode('aa'),some.get('d'))
+</script>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+</body>
+</html>
+<script type="text/javascript">
+	class DoublyNode {
+		constructor (element) {
+			this.element = element;
+			this.next = null;
+			this.prev = null;
+		}
+	}
+	class DoublyLinkedList {
+		constructor () {
+			this.head = null;
+			this.tail = null;
+			this.length = 0;
+		}
+		insert(element, position) {
+			if (position > -1 && position <= this.length) {
+                const dbnode = new DoublyNode(element);
+                let current = this.head;
+                if (position == 0) {
+                	if (this.head == null) {
+                		this.head = dbnode;
+                		this.tail = dbnode;
+                	} 
+                	else{
+                		dbnode.next = current; //新节点的next指向this.head指向的原第一个节点（所有节点）
+                		current.prev = node; 
+                		this.head = dbnode;//头指向新第一个节点
+
+                	}
+                }
+                else if(position == this.length) {
+                	current = this.tail;
+                	current.next = dbnode
+                	dbnode.prev = current;
+                	this.tail = dbnode;
+                }
+                else {
+                	let index = 0;
+                	while(position > index){
+                		current = current.next;
+                		index++
+                	}
+                	current.prev.next = dbnode;
+                	dbnode.next = current;
+                	dbnode.prev = current.prev;
+                	current.prev = dbnode;
+                }
+                this.length++
+                return true
+			}
+			return false
+		}
+		removeAt(position) {
+			if (position > -1 && position < this.length) {
+				let index = 0;
+				let current = this.head;
+				if (position == 0) {
+					this.head = current.next;
+					current.next.prev = null;
+				}
+				else if(position == this.length -1){ 
+					this.tail = this.tail.prev;
+					this.tail.next = null;
+				}
+				else {
+					while(position > index) {
+					    current = current.next;
+					    index++
+				    }
+				    current.prev.next = current.next;
+				    current.next.prev = current.prev;				    
+				}
+				this.length--
+				return true
+			}
+			return false
+		}
+	} 
+	const dblist = new  DoublyLinkedList();
+	dblist.insert(1,0);
+	dblist.insert(2,1);
+	dblist.insert(3,2);
+	dblist.insert(4,3);
+	// console.log(dblist.head,dblist.length)
+	dblist.insert(8,1);
+	dblist.removeAt(0); // 8,2,3,4  //4
+	// // console.log(dblist.head,dblist.length)
+	 dblist.removeAt(3);// 8,2,3 //3
+	// console.log(dblist.head,dblist.length)
+
+	dblist.removeAt(1);// 8,3  //2
+	  console.log(dblist.head,dblist.length)
+	
+
+</script>

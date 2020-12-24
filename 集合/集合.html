@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script type="text/javascript">
+  class Set {
+    constructor() {
+      this.items = {}
+    }
+    has(element) {
+      return Object.prototype.hasOwnProperty.call(this.items, element)
+    }
+    add(element) {
+      if (!this.has(element)) { //如果不存在相同值就被添加
+        this.items[element] = element;
+        return true
+      }
+      return false
+    }
+    delete(element) {
+      if (this.has(element)) {
+        delete this.items[element]
+        return true
+      }
+      return false
+    }
+    clear() {
+      this.items = {}
+    }
+    size() {
+      let count = 0;
+      for (let n in this.items) {
+        if (this.has(n)) {
+          count++
+        }
+      }
+      return count
+      // return Object.keys(this.items).length
+    }
+    values() {
+      let value = [];
+      for (let n in this.items) {
+        if (this.has(n)) {
+          value.push(Number(n))
+        }
+      }
+      return value
+      // return Object.values(this.items)
+    }
+    union(otherSet) {
+      const unionSet = new Set();
+      this.values().forEach(value => unionSet.add(value));
+      otherSet.values().forEach(value => unionSet.add(value));
+      return unionSet
+    }
+    intersection(otherSet) {
+      const intersectionSet = new Set();
+      const values = this.values();
+      for (let i = 0; i < values.length; i++) {
+        if (otherSet.has(values[i])) {
+          intersectionSet.add(values[i])
+        }
+      }
+      return intersectionSet
+    }
+    difference(otherSet) {
+      const differenceSet = new Set();
+      this.values().forEach(value => {
+        if (!otherSet.has(value)) {
+          differenceSet.add(value);
+        }
+      });
+      return differenceSet
+    }
+    isSubsetOf(otherset) {
+      if (this.size() > otherset.size()) {
+        return false
+      }
+      let falg = true;
+      this.values().every(value => {
+        if (!otherSet.has(value)) {
+          falg = false;
+          return false
+        }
+        return true
+      });
+      return falg
+    }
+  }
+
+  const set = new Set();
+  // const otherset = new Set();
+  // otherset.add(1);
+  // otherset.add(2);
+  set.add(1);
+  set.add(5);
+  set.add(8);
+  let show = set.values();
+  // let m = set.intersection(otherset)
+  // let n = set.union(otherset)
+  // let t = set.difference(otherset)
+  // console.log(n, m, t)
+  console.log(show,set)
+</script>

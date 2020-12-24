@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+</body>
+</html>
+<script type="text/javascript">
+
+const Compar = {
+    LESS_THAN : -1,
+    BIGGER_THAN : 1
+};
+// function defaultCompare(a, b) {
+// 	compareFn(a,b) {
+// 		if(a == b) {
+//             return 0
+//         }
+//     return a < b ? Compare.LESS_THAN : Compare.BIGGER_THAN
+//     }
+// }
+    
+class SortNode {
+	constructor(element) {
+		this.element = element,
+		this.next = null	
+    }
+	compareFn(a,b) {
+		
+    }
+}
+//构建双向链表数据结构
+class SortLikedList {
+    constructor() {
+        this.head = null;
+        this.length = 0;
+    }
+    insert(element,position) {
+    	const node = new SortNode(element)
+    	//越界
+    	if(position > -1 && position <= this.length) {
+    		if (position == 0) {
+    		    let current = this.head;
+    		    this.head = node;
+    		    node.next = current;
+    		    this.length++
+    	    }
+    	    else
+    	    {
+    		    let index = 0;
+    		    let current = this.head;
+    		    let previous = null;
+    		    while(index < position){
+    			    previous = current;  //保存插入位置的上一个节点
+    			    current = current.next; //插入位置的下一个节点
+    			    index++
+    		    }
+    		    previous.next = node; //上一个节点链接到新节点
+    		    node.next = current; //新节点链接到后面的节点
+    		    this.length++
+    	    }
+    	}
+    }
+    sortInsert(element, position = 0) {
+    	if (this.length == 0) {
+    		return this.insert(element, 0)
+
+    	}
+    	else {
+    		const pos = this.getIndexSortElement(element);
+    		return this.insert(element, pos)
+    	}
+    }
+    getIndexSortElement(element) {
+    	let current = this.head;
+    	let i = 0   		
+    	for(; i < this.length && current; i++)
+    	{
+    		let op = current.element;
+    		function defaultCompare(element, op) {
+		        if(element == op) {
+                    return 0
+                }
+                return element < op ? -1 : 1
+            }
+            const comp = defaultCompare(element, op)
+    		if(comp == -1) {
+    			return i
+    		}
+    		current = current.next;
+    	}
+    	return i
+    }
+}
+
+const solist = new SortLikedList();
+solist.sortInsert(1);
+solist.sortInsert(8);
+solist.sortInsert(4);
+solist.sortInsert(0);
+console.log(solist.head)
+</script>

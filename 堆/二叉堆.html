@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script type="module">
+  import {defaultCompare} from './necessary.js'
+  export class MinHeap {
+    constructor(compareFn = defaultCompare) {
+      this.compareFn = compareFn;
+      this.heap = [];  //使用数组存储数据
+    }
+    getLeftIndex(index) {
+      return index*2 + 1
+    }
+    getRightIndex(index) {
+      return index*2 + 2
+    }
+    getParentIndex(index) {
+      if(index == 0){ 
+        return undefined
+      }
+      return Math.floor((index-1) / 2)
+    }
+    insert(value) { //添加节点要进行上移操作
+      if(value != null) {
+        this.heap.push(value);
+        this.siftUp(this.heap.length -1); // 数组长度减1，即为新插入节点的索引值
+        return true;
+      }
+      return false
+    }
+    siftUp(index) { //上移操作，保证每个子节点都要大于等于/小于等于父节点
+      let parent = this.getParentIndex(index); // 获取其上一层父节点的索引
+      while(index >0 && this.compareFn(this.heap[index], this.heap[parent]) == true) { //一直循环执行直到index为0或者父节点小于子节点结束
+        this.swap(this.heap, parent, index); //交换引用数值，位置
+        index = parent; //父节点的索引符给index
+        parent = this.getParentIndex(index); //在找作为index的父节点的父节点的索引值
+      }
+    }
+    swap(array, a, b) {
+      const temp = array[a];
+      array[a] = array[b];
+      array[b] = temp;
+    }
+    size() {
+      return this.heap.length
+    }
+    isEmpty() {
+      return this.size() == 0
+    }
+    findMinmun() {
+      return this.isEmpty() ? undefined : this.heap[0]
+    }
+    extract() {
+      if(this.isEmpty()) {
+        return undefined
+      }
+      if(this.size() == 1) {
+        return this.heap.shift()
+      }
+      this.swap(this.heap, 0, this.size()-1)
+      const removedValue = this.heap.pop();
+      this.siftDown(0);  //删除完第一个值的数组，从0位置进行下移操作(堆化)
+      return removedValue
+    }
+    siftDown(index) {
+      let element = index;
+      const left = this.getLeftIndex(index);
+      const right = this.getRightIndex(index);
+      const size = this.size();
+      // 一层一层下移
+      if(this.compareFn(this.heap[element], this.heap[left]) == false && left < size ) { //比较在头部的最大堆和其左节点的大小，小于就更新索引
+        element = left;
+      }
+      if(this.compareFn(this.heap[element], this.heap[right]) == false && right < size ) { //比较上面交换后的节点和右节点的大小，小于交换索引，大于不变
+        element = right;
+      }
+      if(index !== element) { //第一层判断完，判断有没有进行索引交换，如果发生索引交换就执行对应的值交换
+        this.swap(this.heap, index, element);
+        this.siftDown(element) //然后在目标索引处执行下移操作通往下一层
+      }
+    }
+  }
+  let heap = new MinHeap();
+  let arr =[0,110,10,35,30,71,42,80,23,43,54,67,88]
+  for(let i = 0; i < arr.length; i++){
+    heap.insert(arr[i])
+  }
+  
+  //  堆排序算法直接通过extract()方法剔除最大值（也就是头部节点）
+  let sort = [];
+  let len = heap.heap.length
+  for(let i=0; i<len; i++){
+    sort.push(heap.extract())
+  }
+  console.log(sort)
+
+</script>

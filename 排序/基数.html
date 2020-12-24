@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script>
+  function radixSort(array, radixBase) { //基数Base一般是10
+    if (array.length < 2) {
+      return array
+    }
+    const minValue = findMinValue(array);
+    const maxValue = findMaxValue(array);
+
+    let num = 1;
+    while ((maxValue - minValue) / num >= 1) { //如果是1-9  就会执行一次while
+      array = countSort(array, radixBase, num, minValue);
+      num = num * radixBase;
+    }
+  }
+
+  function countSort(array, radixBase, num, minValue) {
+    let bucketsIndex;
+    const buckets = [];
+    const aux = [];
+    for (let i = 0; i < radixBase; i++) {
+      buckets[i] = 0;
+    }
+    for (let i = 0; i < array.length; i++) {
+      bucketsIndex = Math.floor(((array[i] - minValue) / num) % radixBase);
+    }
+  }
+</script>

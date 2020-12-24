@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script>
+  function lcs(str1, str2) {
+    const l = [];
+    const m = str1.length;
+    const n = str2.length;
+    for (let i = 0; i <= m; i++) {
+      l[i] = [];
+    }
+
+    for (let i = 0; i <= m; i++) {
+      for (let j = 0; j <= n; j++) {
+        l[i][j] = 0;
+      }
+    }
+    for (let i = 0; i <= m; i++) {
+      for (let j = 0; j <= n; j++) {
+        if (i === 0 || j === 0) {
+          l[i][j] = 0;
+        } else if (str1[i - 1] === str2[j - 1]) { //i=1是对于矩阵l i-1是对应于字符要从第一个位置开始 也就是 ‘0’位置
+          l[i][j] = l[i - 1][j - 1] + 1; //所以你看在这里更新值的时候是位置ij了不是i-1和j-1了，更新值是要上一行的上一列(对角)对应位置的值+1
+        } else { //如果不相等则选择更新一个最大值，备选有2个，1.上一行对应位置的值 2.上一列(左边)对应位置的值
+          const a = l[i - 1][j]
+          const b = l[i][j - 1]
+          l[i][j] = a > b ? a : b;
+        }
+      }
+    }
+    findWords(l, m, n, str1, str2)
+    return l[m][n]
+  }
+
+  function findWords(L, len1, len2, str1, str2) {
+    let i = 1;
+    let res = [];
+    for (let m = 0; m <= len1; m++) {
+      for (let n = 0; n <= len2; n++) {
+        if (L[m][n] == i) {
+          res.push(str1[m - 1])
+          i++
+        }
+      }
+    }
+    let words = res.join('')
+    console.log(words)
+  }
+  console.log(lcs('adakbfja', 'afskfsjs'))
+</script>

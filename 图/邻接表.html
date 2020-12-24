@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script type="module">
+  import { defaultToString, ValuePair} from '../字典和哈希/js/defaultToString.js'
+  import {bfs} from './广度优先BFS.js'
+  import {Minbfs} from './BFS最短路径.js'
+  import {Stack} from '../栈.js'
+  import {dfsFirst} from './DFS深度优先算法.js'
+  class Dictionary {
+    constructor( toStrFn = defaultToString ) {
+      this.toStrFn = toStrFn;
+			this.item = {};
+    }
+    hasKey(key) {
+			return this.item[this.toStrFn(key)] != null
+		}
+		set(key, value) {
+			if(key != null && value != null) {
+				const itemKey = this.toStrFn(key);
+				this.item[itemKey] =　new ValuePair(key, value);
+				return true
+			}
+      return false
+		}
+		remove(key) {
+			if(this.hasKey(key)) {
+				delete this.item[this.toStrFn(key)]
+				return true
+			}
+			return false
+		}
+		get(key) {
+			// if(this.hasKey(key)){
+			// 	return this.item[this.toStrFn(key)];
+			// }
+			// return false
+			const valuePair = this.item[this.toStrFn(key)]
+			return valuePair == null ? undefined : valuePair.value
+		}
+  }
+
+  class Graph {
+    constructor(isDirected = false) {
+      this.isDirected = isDirected;
+      this.vertices = [];   //存所有路径顶点
+      this.adjList = new Dictionary()  //存储邻接表路径节点和其相邻节点
+    }
+    addEdge(v, w) {  //添加边（两个顶点即一条边）
+      if(!this.adjList.get(v)) {
+        this.addVertex(v);
+      }
+      if(!this.adjList.get(w)) {
+        this.addVertex(w);
+      }
+      this.adjList.get(v).push(w) //由于get()返回的是v对应的值，即数组因此可以使用push
+      if(!this.isDirected) {
+        this.adjList.get(w).push(v)
+      }
+    }
+    addVertex(v) { //添加顶点
+      if(!this.vertices.includes(v)) {
+        this.vertices.push(v)
+        this.adjList.set(v,[]) //初始化键值对，值是数组的形式哦
+      }
+    }
+    toString() {
+      let str = ''
+      for(let n = 0; n < this.vertices.length; n++) {
+        str  = str + this.vertices[n] + '->' 
+        let neighbors =  this.adjList.get(this.vertices[n])
+        for(let m = 0; m < neighbors.length; m++) {
+          str  = str + ' ' + neighbors[m]
+        }
+        str = str + '\n'
+      }
+      return str
+    }
+  }
+  // const some = new Dictionary() 
+  // some.set('1',[]);
+  const obj = new Graph()
+  const obj_dfs = new Graph(true)
+  const printVertex = (value) => {
+    console.log(value)
+  }
+  // obj.addVertex('A')
+  obj.addEdge('A','B')
+  obj.addEdge('A','C')
+  obj.addEdge('B','D')
+  obj.addEdge('D','E')
+  obj.addEdge('C','E')
+  obj.addEdge('C','F')
+  obj.addEdge('D','G')
+  obj.addEdge('F','G')
+
+  // some.set('1','111q');
+  // console.log(some.item)
+  // console.log(obj.toString(),obj.adjList.item.A.value)
+  bfs(obj, 'A', printVertex)
+  console.log(Minbfs(obj, 'A'))
+  
+  // BFS最短路径
+  let minPaths = Minbfs(obj, 'A').predecessors;
+  let formVer = obj.vertices[0];
+  for(let i =1; i< obj.vertices.length; i++) {
+    const toVertex = obj.vertices[i];
+    const stack = new Stack();
+    for(let v = toVertex; v !== formVer; v = minPaths[v]) {
+      stack.push(v);
+    }
+    stack.push(formVer);
+    let s = stack.pop();
+    while(!stack.isEmpty()){
+      s = s + '-' + stack.pop()
+    }
+    console.log(s)
+  }
+console.log('----------------------')
+  // DFS拓扑排序
+  obj_dfs.addEdge('A','C')
+  obj_dfs.addEdge('A','D')
+  obj_dfs.addEdge('B','D')
+  obj_dfs.addEdge('B','E')
+  obj_dfs.addEdge('C','F')
+  obj_dfs.addEdge('F','E')
+  const result = dfsFirst(obj_dfs)
+  const fTimes = result.finished
+  const myVertices = obj_dfs.vertices
+  let s = '';
+  for(let i = 0; i < myVertices.length; i++) { //删除完后的数组在进行循环
+    let max = 0;
+    let maxName = null;
+    for(let j = 0; j < myVertices.length; j++) { //遍历一次所有的节点，找最大
+      if(fTimes[myVertices[j]] > max) {
+        max = fTimes[myVertices[j]]; //最大值
+        maxName = myVertices[j]; //最大值对应节点名称
+      }
+    }
+    s = s + maxName + '-';  //字符串记录下来本次的最大值
+    delete fTimes[maxName]; //删除这个最大值，为了找下一个最大值
+  }
+  console.log(s)
+
+
+</script>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script>
+  function ratInAMaze(maze) {
+    const solution = []
+    for (let i = 0; i < maze.length; i++) {
+      solution[i] = []
+      for (let j = 0; j < maze[i].length; j++) {
+        solution[i][j] = 0;
+      }
+    }
+    if (findPath(maze, 0, 0, solution) == true) {
+      return solution
+    }
+    return 'NO PATH FOUND'
+  }
+
+  function findPath(maze, x, y, solution) {
+    const n = maze.length;
+    if (x === n - 1 && y === n - 1) { //如果到终点了，退出
+      solution[x][y] = 1; //终端路口标1
+      return true // 反馈走完了
+    }
+    if (isSafe(maze, x, y) === true) { //是否可以行走
+      solution[x][y] = 1; //可以行走就暂时标1
+      if (findPath(maze, x + 1, y, solution)) { //往下走,可行则继续探索
+        return true //反馈此路通
+      }
+      if (findPath(maze, x, y + 1, solution)) { //往左走，可行则继续探索
+        return true //反馈此路通
+      }
+      solution[x][y] = 0; //往下，往左走的时候，发现不可行，此时回到原位值，并且这个暂时的1修改为0,
+      return false //反馈此路不通
+    }
+    return false //反馈此路不通
+  }
+
+  function isSafe(maze, x, y) {
+    const n = maze.length
+    if (x >= 0 && y >= 0 && x < n && y < n && maze[x][y] == 1) {
+      return true
+    }
+    return false
+
+  }
+  const maze = [
+    [1, 1, 0, 0, 0],
+    [1, 1, 1, 0, 0],
+    [1, 0, 1, 1, 1],
+    [1, 0, 1, 0, 1],
+    [1, 1, 1, 0, 1],
+  ]
+
+  console.log(ratInAMaze(maze))
+</script>

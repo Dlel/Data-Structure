@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script>
+  const INF = Number.MAX_SAFE_INTEGER;
+  var graph = [
+    [0, 2, 4, 0, 0, 0],
+    [2, 0, 2, 1, 2, 0],
+    [4, 2, 0, 0, 3, 0],
+    [0, 1, 0, 0, 3, 2],
+    [0, 2, 3, 3, 0, 2],
+    [0, 0, 0, 2, 2, 0]
+  ];
+  const kruskal = graph => {
+    const parent = []; //装前溯点 MST
+    const {
+      length
+    } = graph;
+    const cost = graph; // 复制一个图矩阵，便于删改
+    let ne = 0; // 记录现在的边长
+    let a; //以下都是为了记录索引
+    let b;
+    let u;
+    let v;
+    while (ne < length - 1) { //停止循环的条件就是现在的边数已经到点的数量-1了
+      for (let i = 0, min = INF; i < length; i++) {
+        for (let j = 0; j < length; j++) {
+          if (cost[i][j] < min) { //寻找现在点中的权重最小值
+            min = cost[i][j] //最小值更新
+            u = a = i; //记录两个节点
+            b = v = j;
+          }
+        }
+      }
+
+      u = find(u, parent); //检测，MST中是否已经存在这条边，以免出现环路
+      v = find(v, parent);
+      if (union(u, v, parent)) { //若是不同边 就加入MST中
+        ne++ //确定后边长+1
+      }
+      cost[a][b] = cost[b][a] = INF; //将两个确定点的边赋值为INF，避免下次在进行遍历判断
+    }
+    return parent
+  };
+  // ???
+  const find = (i, parent) => {
+    while (parent[i]) {
+      i = parent[i];
+    }
+    return i;
+  }
+
+  // ???
+  const union = (i, j, parent) => {
+    if (i !== j) {
+      parent[j] = i;
+      return true;
+    }
+    return false;
+  };
+  console.log(kruskal(graph), graph)
+</script>

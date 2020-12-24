@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script>
+  function minCoinChange(coins, amount) { //参数：币种、以及找零数
+    const cache = []; //用来保存，每个情况的最优解
+    const makeChange = value => {
+      if (value <= 0) { //如果找零数是0，直接返回[]
+        return []
+      }
+      if (cache[value]) { //如果找零数最优解已在cache数组里可直接返回
+        return cache[value]
+      }
+      let min = []; //最少找零方案 存储的数组
+      let newMin; //找零更少的方案  
+      let newAmount; //每次找零后还需要找多少钱
+      for (let i = 0; i < coins.length; i++) { //开始找钱
+        const coin = coins[i]; // 找第一张
+        newAmount = value - coin; // 统计还要找多少钱
+        if (newAmount >= 0) { // 发现还要找钱
+          newMin = makeChange(newAmount) // 在调用一次方法找
+        }
+        // 上个if的递归返回开始执行下一个if
+        if (newAmount >= 0 && (newMin.length < min.length - 1 || !min.length) && (newMin.length || !newAmount)) {
+          min = [coin].concat(newMin); //min 为coin和newMIN成员连接起来的字符串   数组实例.concat() 参数不限
+          console.log('new Min ' + min + ' for ' + amount)
+        }
+      } //循环拿2,3,零钱的时候最优
+      return (cache[value] = min); // 这里返回cache数组的第value个数(找零数)保存为此时最优值
+    };
+    return makeChange(amount)
+  }
+
+  console.log(minCoinChange([1, 2, 3], 4))
+</script>
